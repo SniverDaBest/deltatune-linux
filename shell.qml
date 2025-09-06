@@ -210,7 +210,7 @@ PanelWindow {
                     var titleProc = Qt.createQmlObject(`
                         import Quickshell.Io
                         Process {
-                            command: ["playerctl", "metadata", "xesam:title"]
+                            command: ["playerctl", "metadata", "--format", "{{artist}} - {{title}}"]
                             running: true
                             stdout: StdioCollector {
                                 onStreamFinished: {
