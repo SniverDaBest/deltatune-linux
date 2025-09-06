@@ -31,6 +31,9 @@ PanelWindow {
     implicitWidth: bitmapTitle.width * configScale
     implicitHeight: bitmapTitle.height * configScale
 
+    property bool showArtist: Config.c.showArtist ?? true
+    property bool artistFirst: Config.c.artistFirst ?? false
+
     property string musicTitleFontImage: "./fonts/MusicTitleFont.png"
     property string shinonomeGothicImage: "./fonts/ShinonomeGothic.png"
     property string ramcheImage: "./fonts/Ramche.png"
@@ -207,10 +210,20 @@ PanelWindow {
 
             function checkTitleUpdate() {
                 if (currentStatus === "Playing") {
+                    var fmt = "{{artist}} - {{title}}";
+                    if (showArtist) {
+                        if (artistFirst) {
+                            fmt = "{{artist}} - {{title}}";
+                        } else {
+                            fmt = "{{title}} - {{artist}}";
+                        }
+                    } else {
+                        fmt = "{{title}}";
+                    }
                     var titleProc = Qt.createQmlObject(`
                         import Quickshell.Io
                         Process {
-                            command: ["playerctl", "metadata", "--format", "{{artist}} - {{title}}"]
+                            command: ["playerctl", "metadata", "--format", "${fmt}"]
                             running: true
                             stdout: StdioCollector {
                                 onStreamFinished: {
